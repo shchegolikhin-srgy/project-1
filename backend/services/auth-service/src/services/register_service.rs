@@ -2,9 +2,10 @@ use crate::core::app_state::AppState;
 use axum::extract::State;
 use crate::models::user::User;
 use sqlx;
+use std::sync::Arc;
 
 pub async fn register_user_by_username(
-    State(state): State<AppState>,
+    State(state): State<Arc<AppState>>,
     user:User
 ) -> Result<(), sqlx::Error> {
     println!("Операция в бд!");

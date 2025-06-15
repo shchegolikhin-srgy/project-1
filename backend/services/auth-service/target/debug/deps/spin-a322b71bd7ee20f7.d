@@ -1,0 +1,12 @@
+/home/sergey/projects/other/project-1/backend/services/auth-service/target/debug/deps/libspin-a322b71bd7ee20f7.rmeta: /home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spin-0.9.8/src/lib.rs /home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spin-0.9.8/src/barrier.rs /home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spin-0.9.8/src/lazy.rs /home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spin-0.9.8/src/mutex.rs /home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spin-0.9.8/src/mutex/spin.rs /home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spin-0.9.8/src/once.rs /home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spin-0.9.8/src/relax.rs /home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spin-0.9.8/src/rwlock.rs
+
+/home/sergey/projects/other/project-1/backend/services/auth-service/target/debug/deps/spin-a322b71bd7ee20f7.d: /home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spin-0.9.8/src/lib.rs /home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spin-0.9.8/src/barrier.rs /home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spin-0.9.8/src/lazy.rs /home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spin-0.9.8/src/mutex.rs /home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spin-0.9.8/src/mutex/spin.rs /home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spin-0.9.8/src/once.rs /home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spin-0.9.8/src/relax.rs /home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spin-0.9.8/src/rwlock.rs
+
+/home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spin-0.9.8/src/lib.rs:
+/home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spin-0.9.8/src/barrier.rs:
+/home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spin-0.9.8/src/lazy.rs:
+/home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spin-0.9.8/src/mutex.rs:
+/home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spin-0.9.8/src/mutex/spin.rs:
+/home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spin-0.9.8/src/once.rs:
+/home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spin-0.9.8/src/relax.rs:
+/home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/spin-0.9.8/src/rwlock.rs:
