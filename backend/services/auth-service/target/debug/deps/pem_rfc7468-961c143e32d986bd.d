@@ -1,0 +1,10 @@
+/home/sergey/projects/project-1/backend/services/auth-service/target/debug/deps/libpem_rfc7468-961c143e32d986bd.rmeta: /home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/lib.rs /home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/decoder.rs /home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/encoder.rs /home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/error.rs /home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/grammar.rs /home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/../README.md
+
+/home/sergey/projects/project-1/backend/services/auth-service/target/debug/deps/pem_rfc7468-961c143e32d986bd.d: /home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/lib.rs /home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/decoder.rs /home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/encoder.rs /home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/error.rs /home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/grammar.rs /home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/../README.md
+
+/home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/lib.rs:
+/home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/decoder.rs:
+/home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/encoder.rs:
+/home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/error.rs:
+/home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/grammar.rs:
+/home/sergey/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/pem-rfc7468-0.7.0/src/../README.md:

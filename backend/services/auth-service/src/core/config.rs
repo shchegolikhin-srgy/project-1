@@ -11,7 +11,7 @@ pub struct Settings{
 impl Settings{
     pub async fn new()->Result<Self, Error>{
         Ok(Self {
-             database_url: String::from("Ваша бд "),
+             database_url: String::from("postgres://user:password@localhost:5432/projectdb"),
               max_pool_connections:  40,
               addr:SocketAddr::from(([0, 0, 0, 0], 4002)),
         })

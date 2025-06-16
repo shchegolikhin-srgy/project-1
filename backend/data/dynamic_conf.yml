@@ -1,0 +1,22 @@
+# dynamic_conf.yml
+http:
+  routers:
+    api-v1:
+      rule: "PathPrefix(`/route`) && (Host(`localhost`) || Host(`127.0.0.1`))"
+      service: api-v1-service
+      entryPoints:
+        - web
+  services:
+    api-v1-service:
+      loadBalancer:
+        servers:
+          - url: "http://127.0.0.1:5000"
+      
+  middlewares:
+    cors-headers:
+      headers:
+        accessControlAllowOrigin: "*"
+    rate-limit:
+      rateLimit:
+        average: 50
+        burst: 20

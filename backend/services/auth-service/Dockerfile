@@ -1,11 +1,12 @@
-FROM rust:latest
+FROM rust:latest as builder
 
-WORKDIR /app
-
+WORKDIR /usr/src/app
 COPY . .
 
-RUN cargo build --release
+RUN cargo install --path .
 
-EXPOSE 4002
+FROM debian:bullseye-slim
+RUN apt-get update && apt-get install -y libssl1.1 && rm -rf /var/lib/apt/lists/*
+COPY --from=builder /usr/local/cargo/bin/app /usr/local/bin/app
 
-CMD ["./target/release/auth-service"]
+CMD ["app"]
