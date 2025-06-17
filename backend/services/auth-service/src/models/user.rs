@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct User{
-    pub hashed_password: String,
+    pub password_hash: String,
     pub username: String,
     pub email: String,
 }

@@ -22,17 +22,6 @@ pub async fn run_server(state: Arc<AppState>, settings:Settings)->Result<(), Box
         .with_state(state.clone());
     let listener = tokio::net::TcpListener::bind(&settings.addr).await?;
     use services::register_service;
-    let conn:Result<(), Error> = register_service::register_user_by_username(State(state.clone()), User{
-        hashed_password: String::from("password"),
-        username: String::from("pidor@"),
-        email: String::from("example@"),
-    }).await;
-    match conn {
-        Ok(())=>println!("Ok"),
-        _ =>println!("Failed!!!!"),
-    }
-    
-
     serve(listener, app).await?;
     Ok(())
 }

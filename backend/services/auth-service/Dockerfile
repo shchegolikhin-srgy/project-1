@@ -7,6 +7,6 @@ RUN cargo install --path .
 
 FROM debian:bullseye-slim
 RUN apt-get update && apt-get install -y libssl1.1 && rm -rf /var/lib/apt/lists/*
-COPY --from=builder /usr/local/cargo/bin/app /usr/local/bin/app
+COPY --from=builder /usr/local/cargo/bin/auth-service /usr/local/bin/auth-service
 
-CMD ["app"]
+CMD ["auth-service"]
