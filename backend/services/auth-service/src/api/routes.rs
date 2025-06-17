@@ -13,4 +13,5 @@ pub fn router(state: Arc<AppState>) -> Router<Arc<AppState>> {
         .route("/register", post(register::register_handler))
         .route("/refresh", post(register::register_handler))
         .route("/logout", post(register::register_handler))
+        .with_state(state.clone())
 }
