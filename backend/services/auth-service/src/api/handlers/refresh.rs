@@ -1,9 +1,9 @@
-use base64::prelude::*;
+
 use axum::{
     http::StatusCode,
     Json,
 };
-use serde::{Deserialize, Serialize};
+
 use crate::models::login::{LoginRequest, AuthResponse};
 
 

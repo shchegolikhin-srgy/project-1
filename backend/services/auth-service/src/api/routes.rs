@@ -3,7 +3,11 @@ use axum::{
     routing::{post, get},
 };
 use crate::api::handlers::{login, refresh, register, logout};
-pub fn router() -> Router {
+use crate::core::app_state::AppState;
+use axum::extract::State;
+use std::sync::Arc;
+
+pub fn router(state: Arc<AppState>) -> Router<Arc<AppState>> {
     Router::new()
         .route("/login", post(login::login_handler))
         .route("/register", post(register::register_handler))
