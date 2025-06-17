@@ -1,0 +1,2 @@
+fn(Arc<AppState>, axum::Json<RegisterRequest>) -> impl Future<Output = std::result::Result<axum::Json<AuthResponse>, StatusCode>> {register::register_handler}
+fn(Arc<AppState>, axum::Json<RegisterRequest>) -> impl Future<Output = std::result::Result<axum::Json<AuthResponse>, StatusCode>> {register::register_handler}: Handler<_, _>

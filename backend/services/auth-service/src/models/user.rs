@@ -6,3 +6,7 @@ pub struct User{
     pub username: String,
     pub email: String,
 }
+#[derive(Serialize, Deserialize, Debug)]
+pub struct UserRole{
+    pub role:String,
+}

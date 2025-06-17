@@ -3,10 +3,10 @@ use axum::{
     http::StatusCode,
     Json,
 };
+use crate::services::auth_service;
+use crate::models::login::RefreshRequest;
 
-use crate::models::login::{LoginRequest, AuthResponse};
 
-
-pub async fn register_handler(token:String) -> Result<Json<AuthResponse>, StatusCode> {
+pub async fn register_handler(token:String) -> Result<Json<RefreshRequest>, StatusCode> {
     Err(StatusCode::UNAUTHORIZED)
 }

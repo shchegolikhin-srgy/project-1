@@ -1,10 +1,11 @@
 use sqlx::postgres::PgPoolOptions;
 use sqlx::{database, PgPool};
-use std::sync::Arc;
+
 
 #[derive(Clone)]
 pub struct AppState {
     pub pool: PgPool,
+    //pub jwt_secret:[u8],
 }
 
 impl AppState{
@@ -15,6 +16,7 @@ impl AppState{
         .await?;
         Ok(Self {
             pool: pool,
+            //jwt_secret:b"my-secret-key",
          })
     } 
 }

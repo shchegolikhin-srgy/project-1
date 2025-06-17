@@ -1,0 +1,1 @@
+fn(Arc<AppState>) -> impl Future<Output = std::string::String> {protected_route}: Handler<_, _>

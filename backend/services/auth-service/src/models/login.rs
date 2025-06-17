@@ -12,25 +12,26 @@ pub struct AuthResponse {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct TokenResponse {
-    access_token: String,
-    token_type: String,
-    refresh_token: String,
+pub struct TokenResponse {
+    pub access_token: String,
+    pub token_type: String,
+    pub refresh_token: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct Claims {
-    sub: String,
-    exp: usize,
+pub struct Claims {
+    pub sub: String,
+    pub exp: usize,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct RefreshRequest {
-    refresh_token: String,
+pub struct RefreshRequest {
+    pub refresh_token: String,
 }
 
 #[derive(Deserialize)]
 pub struct RegisterRequest {
     pub username: String,
     pub password: String,
+    pub email:String
 }
