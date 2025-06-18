@@ -20,7 +20,7 @@ pub async fn register_user_by_username(
 }
 
 pub async fn register_user_by_email(
-    State(state): State<AppState>,
+    State(state): State<Arc<AppState>>,
     user:User
 ) -> Result<(), sqlx::Error> {
     sqlx::query!(
@@ -35,7 +35,7 @@ pub async fn register_user_by_email(
 }
 
 pub async fn register_user_by_role(
-    State(state): State<AppState>,
+    State(state): State<Arc<AppState>>,
     user:User,
     role:String
 ) -> Result<(), sqlx::Error> {

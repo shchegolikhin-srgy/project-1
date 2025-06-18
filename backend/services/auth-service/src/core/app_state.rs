@@ -1,12 +1,17 @@
 use sqlx::postgres::PgPoolOptions;
 use sqlx::{database, PgPool};
-
+use jsonwebtoken::{decode, encode, Algorithm, DecodingKey, EncodingKey, Header, Validation};
 
 #[derive(Clone)]
 pub struct AppState {
     pub pool: PgPool,
-    //pub jwt_secret:[u8],
+    pub encoding_key: EncodingKey,
+    pub  decoding_key: DecodingKey,
+    pub algorithm:Algorithm,
 }
+
+const SECRET_KEY: &str = "your-secret-key-here";
+
 
 impl AppState{
     pub async fn new(database_url:&str)->Result<Self, sqlx::Error>{
@@ -16,7 +21,9 @@ impl AppState{
         .await?;
         Ok(Self {
             pool: pool,
-            //jwt_secret:b"my-secret-key",
+            encoding_key: EncodingKey::from_secret(SECRET_KEY.as_bytes()),
+            decoding_key: DecodingKey::from_secret(SECRET_KEY.as_bytes()),
+            algorithm:Algorithm::HS256,
          })
     } 
 }
