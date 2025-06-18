@@ -9,7 +9,7 @@ use crate::core::app_state::AppState;
 use axum::extract::State;
 use crate::models::{
     login::{Claims, TokenResponse, RefreshRequest}, 
-    user::User,
+    user::{User, DbUser},
 };
 use std::sync::Arc;
 
@@ -17,20 +17,24 @@ const ACCESS_TOKEN_EXPIRE_MINUTES: i64 = 30;
 
 pub async fn login(State(state): State<Arc<AppState>>,
     user:User)->Result<Json<TokenResponse>, StatusCode>{
-    let (db_username, db_role):(String, String)= auth_service::check_user_by_username(State(state.clone()), &user).await?;
+        let db_user = match auth_service::check_user_by_username(State(state.clone()), &user).await {
+            Ok(Some(user)) => (user),
+            Ok(None)=>return Err(StatusCode::UNAUTHORIZED),
+            Err(_) => return Err(StatusCode::UNAUTHORIZED),
+    };
     let access_exp = Utc::now()+Duration::minutes(ACCESS_TOKEN_EXPIRE_MINUTES);
 
     let access_claims:Claims = Claims {
-        sub: db_username.clone(),
+        sub: db_user.username.clone(),
         exp: access_exp.timestamp() as usize,
-        role: db_role.clone()
+        role: db_user.role.clone()
     };
     let access_token = encode(&Header::new(state.algorithm), &access_claims, &state.encoding_key)
         .map_err(|_| StatusCode::UNAUTHORIZED)?;
     let refresh_claims:Claims = Claims { 
-        sub:db_username, 
+        sub:db_user.username, 
         exp: (Utc::now() + Duration::days(365)).timestamp() as usize, 
-        role:db_role,  
+        role:db_user.role,  
     };
     let refresh_token :String = encode(&Header::new(state.algorithm), &refresh_claims, &state.encoding_key)
         .map_err(|_| StatusCode::UNAUTHORIZED)?;

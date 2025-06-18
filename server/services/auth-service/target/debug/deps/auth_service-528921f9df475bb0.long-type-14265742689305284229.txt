@@ -1,0 +1,1 @@
+impl Future<Output = std::result::Result<axum::Json<TokenResponse>, StatusCode>>: Handler<_, _>

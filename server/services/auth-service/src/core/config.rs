@@ -1,5 +1,4 @@
 use axum::Error;
-use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
 
 pub struct Settings{

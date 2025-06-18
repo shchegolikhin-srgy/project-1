@@ -1,6 +1,6 @@
 use sqlx::postgres::PgPoolOptions;
-use sqlx::{database, PgPool};
-use jsonwebtoken::{decode, encode, Algorithm, DecodingKey, EncodingKey, Header, Validation};
+use sqlx::PgPool;
+use jsonwebtoken::{Algorithm, DecodingKey, EncodingKey};
 
 #[derive(Clone)]
 pub struct AppState {
