@@ -53,7 +53,7 @@ pub async fn delete_user(
     sqlx::query!(
         "DELETE FROM users WHERE username =$1 AND password_hash = $2;",
         user.username,
-        user.password_hash
+        user.password
     )
     .execute(&state.pool) 
     .await?;
@@ -68,7 +68,7 @@ pub async fn update_user_role(
         "UPDATE users SET role = $1  WHERE username =$2 AND password_hash = $3;",
         new_role,
         user.username,
-        user.password_hash
+        user.password
     )
     .execute(&state.pool) 
     .await?;

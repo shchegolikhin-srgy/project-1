@@ -12,7 +12,7 @@ pub async fn register_user_by_username(
     sqlx::query!(
         "INSERT INTO users (username, password_hash) VALUES($1, $2);",
         user.username,
-        user.password_hash
+        user.password
     )
     .execute(&state.pool) 
     .await?;
@@ -26,7 +26,7 @@ pub async fn register_user_by_email(
     sqlx::query!(
         "INSERT INTO users (username, password_hash, email) VALUES($1, $2, $3);",
         user.username,
-        user.password_hash,
+        user.password,
         user.email
     )
     .execute(&state.pool) 
@@ -43,7 +43,7 @@ pub async fn register_user_by_role(
     sqlx::query!(
         "INSERT INTO users (username, password_hash, role, email) VALUES($1, $2, $3, $4);",
         user.username,
-        user.password_hash,
+        user.password,
         role,
         user.email
     )

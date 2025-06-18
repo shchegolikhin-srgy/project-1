@@ -1,6 +1,6 @@
 use bcrypt::{hash, verify, DEFAULT_COST};
 use chrono::{Duration, Utc};
-use jsonwebtoken::{ decode, encode, Header, Validation};
+use jsonwebtoken::{ decode, encode, Header, TokenData, Validation};
 use axum::{
     http::StatusCode,
     Json,
@@ -18,7 +18,7 @@ const ACCESS_TOKEN_EXPIRE_MINUTES: i64 = 30;
 pub async fn login(State(state): State<Arc<AppState>>,
     user:User)->Result<Json<TokenResponse>, StatusCode>{
     //проверка
-    if user.password_hash !="ds"{
+    if user.password !="ds"{
         return Err(StatusCode::UNAUTHORIZED);
     }
     let access_exp = Utc::now()+Duration::minutes(ACCESS_TOKEN_EXPIRE_MINUTES);
@@ -36,19 +36,44 @@ pub async fn login(State(state): State<Arc<AppState>>,
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
     Ok(Json(TokenResponse {
-         access_token: access_token,
-          token_type: "Bearer".to_string(),
-           refresh_token: refresh_token,
+        access_token: access_token,
+        token_type: "Bearer".to_string(),
+        refresh_token: refresh_token,
         }))
 }
 
-async fn refresh(State(state): State<Arc<AppState>>,
+pub async fn refresh(State(state): State<Arc<AppState>>,
     Json(request): Json<RefreshRequest>,
 )-> Result<Json<TokenResponse>, StatusCode>{
-    let token_data = decode::<Claims>(
+    let token_data:TokenData<Claims> = decode::<Claims>(
         &request.refresh_token,
         &state.decoding_key,
         &Validation::new(state.algorithm),
-    );
-    return Err(StatusCode::UNAUTHORIZED);
+    ).unwrap();
+
+     //  Проверки жизни токена через бд
+
+    let access_exp = Utc::now()+Duration::minutes(ACCESS_TOKEN_EXPIRE_MINUTES);
+    let access_claims = Claims {
+        sub: token_data.claims.sub,  // Клонируем sub из валидного токена
+        exp: access_exp.timestamp() as usize,
+    };
+    let access_token = encode(&Header::new(state.algorithm), &access_claims, &state.encoding_key)
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    Ok(Json(TokenResponse {
+        access_token: access_token,
+        token_type: "Bearer".to_string(),
+        refresh_token: request.refresh_token,
+        }))
+}
+
+pub async fn logout(State(state): State<Arc<AppState>>,
+    claims: Claims, 
+    
+)-> Result<(), StatusCode>{
+    Ok(())
+}
+async fn protected_route(claims: Claims) -> String {
+    format!("Hello, {}! This is a protected route.", claims.sub)
 }

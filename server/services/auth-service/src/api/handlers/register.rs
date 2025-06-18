@@ -15,7 +15,7 @@ pub async fn register_handler(
     Json(payload): Json<RegisterRequest>,
 ) -> Result<(), StatusCode> {
     register_service::register_user_by_username(State(state.clone()), User{
-        password_hash: String::from("password"),
+        password: String::from("password"),
         username: String::from("pidor@"),
         email: String::from("example@"),
     }).await;
@@ -27,7 +27,7 @@ pub async fn register_by_role_handler(
     Json(payload): Json<RegisterRequest>,
 ) -> Result<(), StatusCode> {
     register_service::register_user_by_role(State(state.clone()), User{
-        password_hash: String::from("password"),
+        password: String::from("password"),
         username: String::from("pidor@"),
         email: String::from("example@"),
     }, String::from("admin")).await;

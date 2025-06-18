@@ -1,18 +1,22 @@
-use base64::prelude::*;
+use axum::http::request;
 use axum::{
     http::StatusCode,
     Json,
 };
-use std::collections::HashMap;
-use jsonwebtoken::{encode, Header, EncodingKey};
-use crate::models::login::{AuthResponse, LoginRequest};
-
+use crate::models::{login::{TokenResponse, LoginRequest}, user::User};
+use crate::services::token_service::login;
 use std::sync::Arc;
 use crate::core::app_state::AppState;
 use axum::extract::State;
 
-const JWT_SECRET: &[u8] = b"my-secret-key";
+pub async fn login_handler(
+    State(state): State<Arc<AppState>>,
+    Json(request): Json<LoginRequest>
+) -> Result<Json<TokenResponse>, StatusCode> {
 
-pub async fn login_handler(State(state): State<Arc<AppState>>, Json(payload): Json<LoginRequest>) -> Result<Json<AuthResponse>, StatusCode> {
-    return Err(StatusCode::UNAUTHORIZED);
+    return login(State(state), User{
+        username:request.username,
+        password:request.password,
+        email:String::from("-")
+    }).await
 }
