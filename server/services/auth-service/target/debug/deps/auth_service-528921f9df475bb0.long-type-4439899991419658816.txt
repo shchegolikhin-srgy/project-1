@@ -1,0 +1,1 @@
+std::result::Result<std::option::Option<user_exists_by_username::{closure#0}::Record>, sqlx::Error>

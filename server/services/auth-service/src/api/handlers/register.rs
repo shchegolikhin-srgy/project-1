@@ -12,24 +12,13 @@ use crate::models::user::User;
 
 pub async fn register_handler(
     State(state): State<Arc<AppState>>,
-    Json(payload): Json<RegisterRequest>,
+    Json(request): Json<RegisterRequest>,
 ) -> Result<(), StatusCode> {
     register_service::register_user_by_username(State(state.clone()), User{
-        password: String::from("password"),
-        username: String::from("pidor@"),
-        email: String::from("example@"),
-    }).await;
-    Ok(())
-}
-
-pub async fn register_by_role_handler(
-    State(state): State<Arc<AppState>>,
-    Json(payload): Json<RegisterRequest>,
-) -> Result<(), StatusCode> {
-    register_service::register_user_by_role(State(state.clone()), User{
-        password: String::from("password"),
-        username: String::from("pidor@"),
-        email: String::from("example@"),
-    }, String::from("admin")).await;
+        username:request.username,
+        password: request.password,
+        email:String::from("_"),
+        role:String::from("user")
+    }).await.unwrap();
     Ok(())
 }

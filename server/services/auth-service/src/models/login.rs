@@ -6,11 +6,6 @@ pub struct LoginRequest {
     pub password: String,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
-pub struct AuthResponse {
-    pub token: String,
-}
-
 #[derive(Debug, Serialize, Deserialize)]
 pub struct TokenResponse {
     pub access_token: String,
@@ -22,6 +17,7 @@ pub struct TokenResponse {
 pub struct Claims {
     pub sub: String,
     pub exp: usize,
+    pub role:String
 }
 
 #[derive(Debug, Serialize, Deserialize)]
