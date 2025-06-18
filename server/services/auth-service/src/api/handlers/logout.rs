@@ -1,9 +1,14 @@
-use base64::prelude::*;
 use axum::{
     http::StatusCode,
     Json,
 };
-use std::collections::HashMap;
-use jsonwebtoken::{encode, Header, EncodingKey};
-use serde::{Deserialize, Serialize};
-use crate::models::login::{AuthResponse, LoginRequest};
+use crate::services::token_service::logout;
+use crate::models::login::Claims;
+use std::sync::Arc;
+use crate::core::app_state::AppState;
+use axum::extract::State;
+
+pub async fn logout_handler(State(state): State<Arc<AppState>>,
+    Json(request): Json<Claims>)->Result<(), StatusCode>{
+    return logout(State(state), Json(request)).await
+}

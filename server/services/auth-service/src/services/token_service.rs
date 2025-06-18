@@ -1,4 +1,3 @@
-use bcrypt::{hash, verify, DEFAULT_COST};
 use chrono::{Duration, Utc};
 use jsonwebtoken::{ decode, encode, Header, TokenData, Validation};
 use axum::{
@@ -69,8 +68,7 @@ pub async fn refresh(State(state): State<Arc<AppState>>,
 }
 
 pub async fn logout(State(state): State<Arc<AppState>>,
-    claims: Claims, 
-    
+    Json(claims):Json<Claims>, 
 )-> Result<(), StatusCode>{
     Ok(())
 }
