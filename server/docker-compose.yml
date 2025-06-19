@@ -1,5 +1,18 @@
 version: '3'
 services:
+  auth-service:
+    build: ./services/auth-service
+    ports:
+    - "8080:4002"
+    environment:
+      DATABASE_URL: "postgres://user:password@localhost:5432/projectdb"
+      KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
+      REDIS_URL: "redis://redis:6379"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - default
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.0
     environment:
@@ -65,10 +78,11 @@ services:
       timeout: 3s
       retries: 30
 networks:
-  web:
+  default:
     driver: bridge
   traefik-net:
     driver: bridge
+  
 volumes:
   redis_data:
   postgres_data:
