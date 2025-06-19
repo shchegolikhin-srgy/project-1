@@ -13,8 +13,6 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-EXPOSE 4002 5432
-
 COPY --from=builder /usr/local/cargo/bin/auth-service /usr/local/bin/auth-service
 
 CMD ["auth-service"]
