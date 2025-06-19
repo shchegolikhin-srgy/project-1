@@ -78,6 +78,11 @@ pub async fn logout(State(state): State<Arc<AppState>>,
 )-> Result<(), StatusCode>{
     Ok(())
 }
-async fn protected_route(claims: Claims) -> String {
-    format!("Hello, {}! This is a protected route.", claims.sub)
+
+pub async fn verify_jwt(State(state): State<Arc<AppState>>, token: &str) -> Result<String, anyhow::Error> {
+    let claims = decode::<Claims>(
+        token,
+        &state.decoding_key,
+        &Validation::new(state.algorithm))?;
+    Ok(claims.claims.sub)
 }

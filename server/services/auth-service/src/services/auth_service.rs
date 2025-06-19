@@ -21,7 +21,7 @@ pub async fn user_exists_by_username(
 pub async fn check_user_by_email(
     State(state): State<Arc<AppState>>,
     user:UserData
-)-> Result<Option<DbUser>, sqlx::Error>{
+)-> Result<Option<DbUser>, anyhow::Error>{
     let result =sqlx::query_as::<_, DbUser>(
         "SELECT username, role, password_hash FROM users WHERE email= $1;"
     )
@@ -71,4 +71,3 @@ pub async fn update_user_role(
     .await?;
     Ok(())
 }
-
