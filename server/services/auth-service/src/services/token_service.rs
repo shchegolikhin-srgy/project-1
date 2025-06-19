@@ -9,15 +9,15 @@ use crate::core::app_state::AppState;
 use axum::extract::State;
 use crate::models::{
     login::{Claims, TokenResponse, RefreshRequest}, 
-    user::{User, DbUser},
+    user::{UserData, DbUser},
 };
 use std::sync::Arc;
 
 const ACCESS_TOKEN_EXPIRE_MINUTES: i64 = 30;
 
 pub async fn login(State(state): State<Arc<AppState>>,
-    user:User)->Result<Json<TokenResponse>, StatusCode>{
-        let db_user = match auth_service::check_user_by_username(State(state.clone()), &user).await {
+    user:UserData)->Result<Json<TokenResponse>, StatusCode>{
+        let db_user = match auth_service::check_user_by_username(State(state.clone()), user).await {
             Ok(Some(user)) => (user),
             Ok(None)=>return Err(StatusCode::UNAUTHORIZED),
             Err(_) => return Err(StatusCode::UNAUTHORIZED),
