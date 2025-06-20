@@ -3,6 +3,8 @@ use axum::extract::State;
 use crate::models::user::{UserData, DbUser};
 use sqlx;
 use std::sync::Arc;
+use bcrypt::verify;
+use anyhow::anyhow;
 
 pub async fn user_exists_by_username(
     State(state): State<Arc<AppState>>,
@@ -26,7 +28,12 @@ pub async fn check_user_by_email(
     )
     .bind(&user.email)
     .fetch_optional(&state.pool) 
-    .await?;
+            .await?;
+    let Some(db_user) = result.clone() else {
+            return Ok(None);
+    };
+    verify(&user.password, &db_user.password_hash)
+        .map_err(|e| anyhow::anyhow!("Password verification failed: {}", e))?;;
     Ok(result)
 }
 
@@ -40,6 +47,11 @@ pub async fn check_user_by_username(
     .bind(&user.username)
     .fetch_optional(&state.pool) 
     .await?;
+    let Some(db_user) = result.clone() else {
+            return Ok(None);
+    };
+    verify(&user.password, &db_user.password_hash)
+        .map_err(|e| anyhow::anyhow!("Password verification failed: {}", e))?;;
     Ok(result)
 }
 

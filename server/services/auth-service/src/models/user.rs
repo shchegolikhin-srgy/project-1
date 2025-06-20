@@ -15,7 +15,7 @@ pub struct User{
     pub role:String
 }
 
-#[derive(sqlx::FromRow)]
+#[derive(sqlx::FromRow, Clone)]
 pub struct DbUser {
     pub username: String,
     pub role:String,

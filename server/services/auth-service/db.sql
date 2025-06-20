@@ -12,8 +12,6 @@ INSERT INTO users (username, password_hash) VALUES('#', '#');
 
 INSERT INTO users (username, password_hash, email) VALUES('#', '#', 'example@com');
 
-INSERT INTO users (username, password_hash, role, email) VALUES('#', '#', 'pidor', 'example@com');
-
 SELECT * FROM users;
 SELECT role FROM users WHERE username = '#';
 SELECT role, password_hash FROM users WHERE username ='#' OR email = '#';
