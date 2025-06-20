@@ -7,7 +7,7 @@ use std::sync::Arc;
 pub async fn user_exists_by_username(
     State(state): State<Arc<AppState>>,
     user:&UserData
-)-> Result<Option<DbUser>, sqlx::Error>{
+)-> Result<Option<DbUser>, anyhow::Error>{
     let result = sqlx::query_as::<_, DbUser>(
         "SELECT username, role, password_hash FROM users WHERE username= $1;",
     )
@@ -33,7 +33,7 @@ pub async fn check_user_by_email(
 pub async fn check_user_by_username(
     State(state): State<Arc<AppState>>,
     user: UserData
-)-> Result<Option<DbUser>, sqlx::Error>{
+)-> Result<Option<DbUser>,anyhow::Error>{
     let result = sqlx::query_as::<_, DbUser>(
         "SELECT username, role, password_hash FROM users WHERE username = $1;",
     )
@@ -47,7 +47,7 @@ pub async fn check_user_by_username(
 pub async fn delete_user(
     State(state): State<Arc<AppState>>,
     user:&UserData
-)-> Result<(), sqlx::Error>{
+)-> Result<(), anyhow::Error>{
     sqlx::query(
         "DELETE FROM users WHERE username =$1;"
     )
@@ -60,7 +60,7 @@ pub async fn delete_user(
 pub async fn update_user_role(
     State(state): State<Arc<AppState>>,
     user:&UserData, new_role:String
-)-> Result<(), sqlx::Error>{
+)-> Result<(), anyhow::Error>{
     sqlx::query(
         "UPDATE users SET role = $1  WHERE username =$2 AND password_hash = $3;")
     .bind(new_role)

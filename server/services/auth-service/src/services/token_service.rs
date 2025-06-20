@@ -18,7 +18,7 @@ const ACCESS_TOKEN_EXPIRE_MINUTES: i64 = 30;
 pub async fn login(State(state): State<Arc<AppState>>,
     user:UserData)->Result<Json<TokenResponse>, StatusCode>{
         let db_user:DbUser = match auth_service::check_user_by_username(State(state.clone()), user).await {
-            Ok(Some(user)) => (user),
+            Ok(Some(user)) => user,
             Ok(None)=>return Err(StatusCode::UNAUTHORIZED),
             Err(_) => return Err(StatusCode::UNAUTHORIZED),
     };
