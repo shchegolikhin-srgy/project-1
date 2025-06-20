@@ -16,7 +16,7 @@ use api::routes;
 pub async fn run_server(state: Arc<AppState>, settings:Settings)->Result<(), Box<dyn std::error::Error>>{
     let app = Router::new()
         .merge(routes::router(state.clone()))
-        .with_state(state.clone());
+        .with_state(state);
     let listener = tokio::net::TcpListener::bind(&settings.addr).await?;
 
     serve(listener, app).await?;

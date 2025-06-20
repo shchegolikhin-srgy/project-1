@@ -14,10 +14,10 @@ pub async fn register_handler(
     State(state): State<Arc<AppState>>,
     Json(request): Json<RegisterRequest>,
 ) -> Result<(), StatusCode> {
-    register_service::register_user_by_username(State(state.clone()),RegisterUser{
+    register_service::register_user_by_email(State(state.clone()),RegisterUser{
         username:request.username,
         password: request.password,
-        email:String::from("_"),
+        email:request.email,
         role:String::from("user")
     }).await.unwrap();
     Ok(())
