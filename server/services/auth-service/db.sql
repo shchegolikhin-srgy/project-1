@@ -21,4 +21,4 @@ SELECT username, role, password_hash FROM users WHERE username= $1;
 
 UPDATE users SET role = 'pidor'  WHERE username ='#' AND password_hash = '#';
 
-DELETE FROM users WHERE username ='#' AND password_hash = '#';
+DELETE FROM users WHERE username ='#';

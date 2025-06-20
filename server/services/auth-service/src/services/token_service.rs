@@ -9,7 +9,7 @@ use crate::core::app_state::AppState;
 use axum::extract::State;
 use crate::models::{
     login::{Claims, TokenResponse, RefreshRequest}, 
-    user::{UserData, DbUser},
+    user::{UserData, DbUser, User},
 };
 use std::sync::Arc;
 
@@ -17,7 +17,7 @@ const ACCESS_TOKEN_EXPIRE_MINUTES: i64 = 30;
 
 pub async fn login(State(state): State<Arc<AppState>>,
     user:UserData)->Result<Json<TokenResponse>, StatusCode>{
-        let db_user = match auth_service::check_user_by_username(State(state.clone()), user).await {
+        let db_user:DbUser = match auth_service::check_user_by_username(State(state.clone()), user).await {
             Ok(Some(user)) => (user),
             Ok(None)=>return Err(StatusCode::UNAUTHORIZED),
             Err(_) => return Err(StatusCode::UNAUTHORIZED),
@@ -55,7 +55,7 @@ pub async fn refresh(State(state): State<Arc<AppState>>,
         &Validation::new(state.algorithm),
     ).unwrap();
 
-     //  Проверки жизни токена через бд
+    
 
     let access_exp = Utc::now()+Duration::minutes(ACCESS_TOKEN_EXPIRE_MINUTES);
     let access_claims = Claims {
@@ -79,10 +79,13 @@ pub async fn logout(State(state): State<Arc<AppState>>,
     Ok(())
 }
 
-pub async fn verify_jwt(State(state): State<Arc<AppState>>, token: &str) -> Result<String, anyhow::Error> {
+pub async fn verify_jwt(State(state): State<Arc<AppState>>, token: &str) -> Result<User, anyhow::Error> {
     let claims = decode::<Claims>(
         token,
         &state.decoding_key,
         &Validation::new(state.algorithm))?;
-    Ok(claims.claims.sub)
+    Ok(User{
+        username:claims.claims.sub, 
+        role: claims.claims.role,
+    })
 }

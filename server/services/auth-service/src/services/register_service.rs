@@ -3,7 +3,7 @@ use axum::extract::State;
 use crate::models::user::RegisterUser;
 use sqlx;
 use std::sync::Arc;
-use bcrypt::{hash, verify, DEFAULT_COST};
+use bcrypt::{hash, DEFAULT_COST};
 
 pub async fn register_user_by_username(
     State(state): State<Arc<AppState>>,

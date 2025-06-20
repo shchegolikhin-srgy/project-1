@@ -1,9 +1,8 @@
 use crate::core::app_state::AppState;
-use axum::{extract::State, http::StatusCode};
+use axum::extract::State;
 use crate::models::user::{UserData, DbUser};
 use sqlx;
 use std::sync::Arc;
-use bcrypt::{verify, DEFAULT_COST};
 
 pub async fn user_exists_by_username(
     State(state): State<Arc<AppState>>,

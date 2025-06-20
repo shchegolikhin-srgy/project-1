@@ -37,7 +37,3 @@ pub async fn auth_middleware(
     request.extensions_mut().insert(username);
     Ok(request)
 }
-
-async fn protected_route(Extension(username): Extension<String>) -> String {
-    format!("Вы авторизованы как: {}", username)
-}
