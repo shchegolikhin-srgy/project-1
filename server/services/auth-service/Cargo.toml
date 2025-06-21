@@ -16,3 +16,4 @@ redis = "0.32"
 bcrypt = "0.17"
 chrono = { version = "0.4", features = ["serde"] }
 anyhow = "1.0"
+tower = "0.4"
