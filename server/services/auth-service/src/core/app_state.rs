@@ -12,7 +12,6 @@ pub struct AppState {
 
 const SECRET_KEY: &str = "your-secret-key-here";
 
-
 impl AppState{
     pub async fn new(database_url:&str)->Result<Self, sqlx::Error>{
         let pool = PgPoolOptions::new()

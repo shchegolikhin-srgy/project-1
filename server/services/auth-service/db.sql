@@ -20,3 +20,9 @@ SELECT username, role, password_hash FROM users WHERE username= $1;
 UPDATE users SET role = 'pidor'  WHERE username ='#' AND password_hash = '#';
 
 DELETE FROM users WHERE username ='#';
+
+CREATE TABLE refresh_tokens(
+    id SERIAL PRIMARY KEY,
+    token_hash TEXT NOT NULL,
+    user_id INTEGER REFERENCES users(id)
+);

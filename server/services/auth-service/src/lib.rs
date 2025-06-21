@@ -12,7 +12,7 @@ use axum::{
 };
 use core::config::Settings;
 use std::sync::Arc;
-use api::routes;
+use api::v1::routes;
 
 pub async fn run_server(state: Arc<AppState>, settings:Settings)->Result<(), Box<dyn std::error::Error>>{
     let app = Router::new()
