@@ -46,26 +46,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-  traefik:
-    image: traefik:v2.9
-    container_name: traefik
-    restart: unless-stopped
-    command:
-      - --providers.docker=true  
-      - --providers.docker.exposedbydefault=false  
-      - --entrypoints.websecure.address=:443  # HTTPS
-    ports:
-      - "10000:80"
-      - "443:443"
-      - "8080:8080"  
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /var/run/docker.sock:/var/run/docker.sockAdd commentMore actions
-      - ./data/traefik.yml:/traefik.yml:ro
-      - ./data/acme.json:/acme.json
-      - ./data:/dynamic_conf.yml:ro
-    networks:
-      - traefik-net
   redis:
     image: redis:7-alpine
     ports:
@@ -80,9 +60,6 @@ services:
 networks:
   default:
     driver: bridge
-  traefik-net:
-    driver: bridge
-  
 volumes:
   redis_data:
   postgres_data:

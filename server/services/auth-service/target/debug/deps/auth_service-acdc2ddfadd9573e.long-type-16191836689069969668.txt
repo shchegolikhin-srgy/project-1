@@ -1,0 +1,1 @@
+axum::middleware::FromFn<fn(State<Arc<AppState>>) -> impl Future<Output = Result<Response<Body>, StatusCode>> {auth_middleware}, Arc<AppState>, Route, _>: tower::Service<axum::http::Request<Body>>
