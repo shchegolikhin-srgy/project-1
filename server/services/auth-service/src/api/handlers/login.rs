@@ -1,11 +1,10 @@
-use anyhow::Ok;
 use axum::{
-    http::{response, HeaderMap, StatusCode},
+    http::{HeaderMap, StatusCode},
     Json,
 };
 use crate::models::{login::{TokenResponse, LoginRequest}, user::{UserData, User}};
 use crate::services::token_service::{verify_jwt, login};
-use std::{fmt::format, sync::Arc};
+use std::sync::Arc;
 use crate::core::app_state::AppState;
 use axum::extract::State;
 
@@ -19,7 +18,6 @@ pub async fn login_handler(
         email:String::from("_"),
         role:String::from("user"),
     }).await;
-    println!("{:?}", result);
     result
 }
 

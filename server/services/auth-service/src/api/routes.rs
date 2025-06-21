@@ -1,17 +1,15 @@
 use axum::{
     body::Body, extract::{Request, State},
-     http::{HeaderValue, StatusCode, HeaderMap},
-      middleware::{self, from_fn_with_state, Next}, 
-      response::Response, routing::{get, post},
-       Router
-
+    http::{HeaderValue, StatusCode, HeaderMap},
+    middleware::{from_fn_with_state, Next}, 
+    response::Response, 
+    routing::{get, post},
+    Router
 };
-use sqlx::query_as_unchecked;
 use crate::api::handlers::{login, refresh, register, logout};
 use crate::core::app_state::AppState;
 use std::sync::Arc;
 use crate::services::token_service::verify_jwt;
-
 
 pub fn router(state: Arc<AppState>) -> Router<Arc<AppState>> {
     Router::new()
@@ -22,7 +20,6 @@ pub fn router(state: Arc<AppState>) -> Router<Arc<AppState>> {
         .with_state(state.clone())
         .layer(from_fn_with_state(state, auth_middleware))
 }
-
 
 fn extract_token(headers: &HeaderMap) -> Result<String, StatusCode> {
     let auth_header = headers.get("Authorization").ok_or(StatusCode::UNAUTHORIZED)?;

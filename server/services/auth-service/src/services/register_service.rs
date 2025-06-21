@@ -4,6 +4,7 @@ use crate::models::user::RegisterUser;
 use sqlx;
 use std::sync::Arc;
 use bcrypt::{hash, DEFAULT_COST};
+use uuid::Uuid;
 
 pub async fn register_user_by_username(
     State(state): State<Arc<AppState>>,

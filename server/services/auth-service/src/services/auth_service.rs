@@ -4,7 +4,6 @@ use crate::models::user::{UserData, DbUser};
 use sqlx;
 use std::sync::Arc;
 use bcrypt::verify;
-use anyhow::anyhow;
 
 pub async fn user_exists_by_username(
     State(state): State<Arc<AppState>>,
