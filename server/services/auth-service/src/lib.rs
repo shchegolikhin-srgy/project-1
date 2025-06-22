@@ -7,25 +7,27 @@ pub mod models;
 use axum::{
     Router,
     serve,
-    routing::{get, post},
-    middleware::from_fn_with_state,
+    extract::State,
 };
 use core::config::Settings;
 use std::sync::Arc;
 use api::v1::routes;
 
+use crate::models::user::UserData;
+
 pub async fn run_server(state: Arc<AppState>, settings:Settings)->Result<(), Box<dyn std::error::Error>>{
     let app = Router::new()
-        .route("/protected", get(protected_route))
-        .layer(from_fn_with_state(state.clone(), routes::auth_middleware))
-        .merge(routes::router(state.clone()))
-        .with_state(state);
+        .merge(routes::public_router(state.clone()))
+        .merge(routes::protected_router(state.clone()))
+        .with_state(state.clone());
     let listener = tokio::net::TcpListener::bind(&settings.addr).await?;
-
+    println!("token is {:?}", crate::services::token_service::login(State(state), UserData{
+        username:String::from("Sergei"),
+        password:String::from("1234"),
+        email:String::from("_"),
+        role:String::from("user"),
+    }).await);
     serve(listener, app).await?;
     Ok(())
 }
 
-async fn protected_route()->String{
-    format!("Private route!!!")
-}

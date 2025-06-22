@@ -11,17 +11,6 @@ use crate::core::app_state::AppState;
 use std::sync::Arc;
 use crate::services::token_service::verify_jwt;
 
-pub fn router(state: Arc<AppState>) -> Router<Arc<AppState>> {
-    Router::new()
-        .route("/v1/login", post(login::login_handler))
-        .route("/v1/register", post(register::register_handler))
-        .route("/v1/refresh", post(refresh::register_handler))
-        .route("/v1/logout", post(logout::logout_handler))
-        .route("/v1/delete-user", post(logout::delete_user))
-        .with_state(state.clone())
-        .layer(from_fn_with_state(state, auth_middleware))
-}
-
 fn extract_token(headers: &HeaderMap) -> Result<String, StatusCode> {
     let auth_header = headers.get("Authorization").ok_or(StatusCode::UNAUTHORIZED)?;
     let auth_str = auth_header.to_str().map_err(|_| StatusCode::UNAUTHORIZED)?;
@@ -42,4 +31,26 @@ pub async fn auth_middleware(
         HeaderValue::from_str(&user.username).unwrap(),
     );
     Ok(response)
+}
+
+pub fn protected_router(state: Arc<AppState>) -> Router<Arc<AppState>> {
+    Router::new()
+        .route("/v1/logout", post(logout::logout_handler))
+        .route("/v1/delete-user", post(logout::delete_user))
+        .route("/protected", get(protected_route))
+        .with_state(state.clone())
+        .layer(from_fn_with_state(state, auth_middleware))
+}
+
+pub fn public_router(state: Arc<AppState>) -> Router<Arc<AppState>> {
+    Router::new()
+        .route("/v1/login", post(login::login_handler))
+        .route("/v1/register", post(register::register_handler))
+        .route("/v1/refresh", post(refresh::register_handler))
+        .with_state(state)
+}
+
+
+async fn protected_route()->String{
+    format!("Private route!!!")
 }
