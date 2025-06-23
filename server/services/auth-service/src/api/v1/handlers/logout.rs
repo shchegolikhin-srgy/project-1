@@ -3,10 +3,9 @@ use axum::{
     Json,
 };
 use crate::services::{
-    token_service::logout,
-    auth_service::delete_user
+    auth_service::{delete_user, logout}
 };
-use crate::models::login::Claims;
+use crate::models::token::Claims;
 use std::sync::Arc;
 use crate::core::app_state::AppState;
 use axum::extract::State;

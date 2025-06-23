@@ -22,7 +22,7 @@ pub struct DbUser {
     pub password_hash: String,
 }
 
-#[derive(sqlx::FromRow)]
+#[derive(sqlx::FromRow, Serialize, Deserialize, Debug, Clone)]
 pub struct UserData {
     pub username: String,
     pub password: String,

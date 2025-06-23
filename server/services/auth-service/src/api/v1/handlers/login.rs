@@ -2,7 +2,11 @@ use axum::{
     http::StatusCode,
     Json,
 };
-use crate::models::{login::{TokenResponse, LoginRequest}, user::{UserData, User}};
+use crate::models::{
+    auth::LoginRequest, 
+    user::UserData,
+    token::TokenResponse,
+};
 use crate::services::token_service::login;
 use std::sync::Arc;
 use crate::core::app_state::AppState;
@@ -17,5 +21,5 @@ pub async fn login_handler(
         password:request.password,
         email:String::from("_"),
         role:String::from("user"),
-    }).await
+    }).await.map_err(|_| StatusCode::UNAUTHORIZED)
 }

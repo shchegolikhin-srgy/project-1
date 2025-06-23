@@ -1,74 +1,98 @@
-use crate::{
-    core::app_state::AppState, 
-    models::login::Claims
+use crate::{core::app_state::AppState, db};
+use axum::{extract::State, Json};
+use crate::models::{
+    user::*,
+    token::Claims,
+    auth::*,
 };
-use axum::extract::State;
-use crate::models::user::{UserData, DbUser};
-use sqlx;
 use std::sync::Arc;
-use bcrypt::verify;
+use bcrypt::{hash, DEFAULT_COST, verify};
+use crate::db::user_data;
+
+pub async fn logout(State(state): State<Arc<AppState>>,
+    Json(claims):Json<Claims>, 
+)-> Result<(), anyhow::Error>{
+    Ok(())
+}
+
+pub async fn register_user_by_email(
+    State(state): State<Arc<AppState>>,
+    user:RegisterUser
+) -> Result<(), anyhow::Error> {
+    let password_hash:String = hash(user.password.clone(), DEFAULT_COST)?;
+    match user_data::register_user_by_email(&state.pool, user, password_hash).await{
+        Ok(())=>Ok(()),
+        _=>Err(anyhow::anyhow!("User already exists"))
+    }
+}
+
+pub async fn register_user_by_role(
+    State(state): State<Arc<AppState>>,
+    user:RegisterUser,
+) -> Result<(), anyhow::Error> {
+    let password_hash:String = hash(user.password.clone(), DEFAULT_COST)?;
+    match user_data::register_user_by_role(&state.pool, user, password_hash).await{
+        Ok(())=>Ok(()),
+        _=>Err(anyhow::anyhow!("User already exists"))
+    }
+}
 
 pub async fn check_user_by_email(
     State(state): State<Arc<AppState>>,
     user:UserData
-)-> Result<Option<DbUser>, anyhow::Error>{
-    let result =sqlx::query_as::<_, DbUser>(
-    "SELECT username, role, password_hash FROM users WHERE email= $1;"
-    )
-    .bind(&user.email)
-    .fetch_optional(&state.pool) 
-        .await?;
-    let Some(db_user) = result.clone() else {
-        return Ok(None);
-    };
-    if !verify(&user.password, &db_user.password_hash)? {
-        return Err(anyhow::anyhow!("Invalid password"));
+)-> Result<User, anyhow::Error>{
+    match user_data::check_user_by_username(&state.pool, user.clone()).await {
+        Ok(password_hash)=>{
+            if !verify(&user.password.clone(), &password_hash)? {
+                Err(anyhow::anyhow!("Invalid password"))
+            }
+            else{
+                Ok(User{
+                    username:user.username,
+                    role:user.role,
+                })
+            }
+        },
+        _=>Err(anyhow::anyhow!("Invalide username or password"))
     }
-    Ok(result)
 }
 
 pub async fn check_user_by_username(
     State(state): State<Arc<AppState>>,
     user: UserData
-)-> Result<Option<DbUser>,anyhow::Error>{
-    let result = sqlx::query_as::<_, DbUser>(
-        "SELECT username, role, password_hash FROM users WHERE username = $1;",
-    )
-    .bind(&user.username)
-    .fetch_optional(&state.pool) 
-    .await?;
-    let Some(db_user) = result.clone() else {
-            return Ok(None);
-    };
-    if !verify(&user.password, &db_user.password_hash)? {
-        return Err(anyhow::anyhow!("Invalid password"));
+)-> Result<User,anyhow::Error>{
+    match user_data::check_user_by_username(&state.pool, user.clone()).await {
+        Ok(password_hash)=>{
+            if !verify(&user.password.clone(), &password_hash)? {
+                Err(anyhow::anyhow!("Invalid password"))
+            }
+            else{
+                Ok(User{
+                    username:user.username,
+                    role:user.role,
+                })
+            }
+        },
+        _=>Err(anyhow::anyhow!("Invalide username or password"))
     }
-    Ok(result)
 }
-
 
 pub async fn delete_user(
     State(state): State<Arc<AppState>>,
     username:&str
 )-> Result<(), anyhow::Error>{
-    sqlx::query(
-        "DELETE FROM users WHERE username =$1;"
-    )
-    .bind(&username)
-    .execute(&state.pool) 
-    .await?;
-    Ok(())
+    match user_data::delete_user(&state.pool, username).await {
+        Ok(())=>Ok(()),
+        _=>Err(anyhow::anyhow!("couldn't delete user"))
+    }
 }
 
 pub async fn update_user_role(
     State(state): State<Arc<AppState>>,
-    user:&UserData, new_role:String
+    data:UpdateRoleData,
 )-> Result<(), anyhow::Error>{
-    sqlx::query(
-        "UPDATE users SET role = $1  WHERE username =$2;")
-    .bind(new_role)
-    .bind(&user.username)
-    .execute(&state.pool) 
-    .await?;
-    Ok(())
+    match user_data::update_user_role(&state.pool, data).await {
+        Ok(())=>Ok(()),
+        _=>Err(anyhow::anyhow!("couldn't delete user"))
+    }
 }

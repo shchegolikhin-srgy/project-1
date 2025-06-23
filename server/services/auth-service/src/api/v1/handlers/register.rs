@@ -2,13 +2,12 @@ use axum::{
     http::StatusCode,
     Json,
 };
-use crate::models::login::RegisterRequest;
+use crate::models::auth::RegisterRequest;
 use std::sync::Arc;
 use crate::core::app_state::AppState;
 use axum::extract::State;
 use crate::services::{
-    register_service::*,
-    auth_service::update_user_role,
+    auth_service::*,
 };
 use crate::models::user::RegisterUser;
 

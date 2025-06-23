@@ -3,6 +3,7 @@ pub use core::AppState;
 pub mod services;
 pub mod api;
 pub mod models;
+pub mod db;
 
 use axum::{
     Router,
