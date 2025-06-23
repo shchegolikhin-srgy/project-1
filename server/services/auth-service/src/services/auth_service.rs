@@ -1,4 +1,7 @@
-use crate::core::app_state::AppState;
+use crate::{
+    core::app_state::AppState, 
+    models::login::Claims
+};
 use axum::extract::State;
 use crate::models::user::{UserData, DbUser};
 use sqlx;
@@ -57,12 +60,12 @@ pub async fn check_user_by_username(
 
 pub async fn delete_user(
     State(state): State<Arc<AppState>>,
-    user:&UserData
+    username:&str
 )-> Result<(), anyhow::Error>{
     sqlx::query(
         "DELETE FROM users WHERE username =$1;"
     )
-    .bind(&user.username)
+    .bind(&username)
     .execute(&state.pool) 
     .await?;
     Ok(())

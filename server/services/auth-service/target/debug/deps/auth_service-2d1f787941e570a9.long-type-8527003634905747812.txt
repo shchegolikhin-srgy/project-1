@@ -1,0 +1,2 @@
+fn(State<Arc<AppState>>, axum::Json<Claims>, {type error}) -> impl futures::Future<Output = Result<(), StatusCode>> {delete_user_handler}
+fn(State<Arc<AppState>>, axum::Json<Claims>, {type error}) -> impl futures::Future<Output = Result<(), StatusCode>> {delete_user_handler}: Handler<_, _>

@@ -1,0 +1,2 @@
+for<'a> fn(State<Arc<AppState>>, &'a UserData) -> impl futures::Future<Output = Result<(), anyhow::Error>> {delete_user}
+for<'a> fn(State<Arc<AppState>>, &'a UserData) -> impl futures::Future<Output = Result<(), anyhow::Error>> {delete_user}: Handler<_, _>

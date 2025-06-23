@@ -1,8 +1,11 @@
 use axum::{
-    http::StatusCode,
+    http::{StatusCode,HeaderMap},
     Json,
 };
-use crate::services::token_service::logout;
+use crate::services::{
+    token_service::logout,
+    auth_service::delete_user
+};
 use crate::models::login::Claims;
 use std::sync::Arc;
 use crate::core::app_state::AppState;
@@ -13,6 +16,16 @@ pub async fn logout_handler(State(state): State<Arc<AppState>>,
     return logout(State(state), Json(request)).await
 }
 
-pub async fn delete_user(State(state): State<Arc<AppState>>)->Result<(), StatusCode>{
-    Ok(())
+pub async fn delete_user_handler(State(state): State<Arc<AppState>>,
+    headers: HeaderMap,
+    )->Result<(), StatusCode>{
+    if let Some(username)= headers.get("X-Username"){
+        delete_user(State(state), username.to_str().unwrap_or("invalid"))
+            .await
+            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+        Ok(())
+    }
+    else {
+        Err(StatusCode::INTERNAL_SERVER_ERROR)
+    }
 }

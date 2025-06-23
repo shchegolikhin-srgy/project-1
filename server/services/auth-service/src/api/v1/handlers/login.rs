@@ -12,11 +12,10 @@ pub async fn login_handler(
     State(state): State<Arc<AppState>>,
     Json(request): Json<LoginRequest>
 ) -> Result<Json<TokenResponse>, StatusCode> {
-    let result = login(State(state), UserData{
+    login(State(state), UserData{
         username:request.username,
         password:request.password,
         email:String::from("_"),
         role:String::from("user"),
-    }).await;
-    result
+    }).await
 }

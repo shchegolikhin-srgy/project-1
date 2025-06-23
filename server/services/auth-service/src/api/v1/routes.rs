@@ -23,9 +23,13 @@ pub async fn auth_middleware(
     request: Request<Body>,
     next: Next,
 ) -> Result<Response, StatusCode> {
+    
     let token = extract_token(request.headers())?;
-    let user = verify_jwt(State(state), &token).await.map_err(|_| StatusCode::UNAUTHORIZED)?;
+    let user = verify_jwt(State(state), &token)
+        .await
+        .map_err(|_| StatusCode::UNAUTHORIZED)?;
     let mut response = next.run(request).await;
+
     response.headers_mut().insert(
         "X-Username",
         HeaderValue::from_str(&user.username).unwrap(),
@@ -36,8 +40,8 @@ pub async fn auth_middleware(
 pub fn protected_router(state: Arc<AppState>) -> Router<Arc<AppState>> {
     Router::new()
         .route("/v1/logout", post(logout::logout_handler))
-        .route("/v1/delete-user", post(logout::delete_user))
-        .route("/protected", get(protected_route))
+        .route("/v1/delete-user", post(logout::delete_user_handler))
+        .route("/v1/protected", get(protected_route))
         .with_state(state.clone())
         .layer(from_fn_with_state(state, auth_middleware))
 }

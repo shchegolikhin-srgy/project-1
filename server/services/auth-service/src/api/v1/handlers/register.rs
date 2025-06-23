@@ -18,10 +18,10 @@ pub async fn register_handler(
         password: request.password,
         email:request.email,
         role:String::from("user")
-    }).await.unwrap();
+    }).await.map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
     Ok(())
 }
 
-pub async fn update_user_role(State(state): State<Arc<AppState>>)->Result<(), StatusCode>{
+pub async fn update_user_role_handler(State(state): State<Arc<AppState>>)->Result<(), StatusCode>{
     Ok(())
 }
