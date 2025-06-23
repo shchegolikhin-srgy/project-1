@@ -31,3 +31,8 @@ pub struct RegisterRequest {
     pub password: String,
     pub email:String
 }
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct UpdateRoleRequest{
+    pub new_role:String,
+}

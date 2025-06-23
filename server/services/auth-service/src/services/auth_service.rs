@@ -8,34 +8,22 @@ use sqlx;
 use std::sync::Arc;
 use bcrypt::verify;
 
-pub async fn user_exists_by_username(
-    State(state): State<Arc<AppState>>,
-    user:&UserData
-)-> Result<Option<DbUser>, anyhow::Error>{
-    let result = sqlx::query_as::<_, DbUser>(
-        "SELECT username, role, password_hash FROM users WHERE username= $1;",
-    )
-    .bind(&user.username)
-    .fetch_optional(&state.pool) 
-    .await?;
-    Ok(result)
-}
-
 pub async fn check_user_by_email(
     State(state): State<Arc<AppState>>,
     user:UserData
 )-> Result<Option<DbUser>, anyhow::Error>{
     let result =sqlx::query_as::<_, DbUser>(
-        "SELECT username, role, password_hash FROM users WHERE email= $1;"
+    "SELECT username, role, password_hash FROM users WHERE email= $1;"
     )
     .bind(&user.email)
     .fetch_optional(&state.pool) 
-            .await?;
+        .await?;
     let Some(db_user) = result.clone() else {
-            return Ok(None);
+        return Ok(None);
     };
-    verify(&user.password, &db_user.password_hash)
-        .map_err(|e| anyhow::anyhow!("Password verification failed: {}", e))?;;
+    if !verify(&user.password, &db_user.password_hash)? {
+        return Err(anyhow::anyhow!("Invalid password"));
+    }
     Ok(result)
 }
 
@@ -52,8 +40,9 @@ pub async fn check_user_by_username(
     let Some(db_user) = result.clone() else {
             return Ok(None);
     };
-    verify(&user.password, &db_user.password_hash)
-        .map_err(|e| anyhow::anyhow!("Password verification failed: {}", e))?;;
+    if !verify(&user.password, &db_user.password_hash)? {
+        return Err(anyhow::anyhow!("Invalid password"));
+    }
     Ok(result)
 }
 
@@ -76,10 +65,9 @@ pub async fn update_user_role(
     user:&UserData, new_role:String
 )-> Result<(), anyhow::Error>{
     sqlx::query(
-        "UPDATE users SET role = $1  WHERE username =$2 AND password_hash = $3;")
+        "UPDATE users SET role = $1  WHERE username =$2;")
     .bind(new_role)
     .bind(&user.username)
-    .bind(&user.password)
     .execute(&state.pool) 
     .await?;
     Ok(())

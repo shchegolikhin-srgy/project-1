@@ -75,7 +75,7 @@ pub async fn refresh(State(state): State<Arc<AppState>>,
 
 pub async fn logout(State(state): State<Arc<AppState>>,
     Json(claims):Json<Claims>, 
-)-> Result<(), StatusCode>{
+)-> Result<(), anyhow::Error>{
     Ok(())
 }
 

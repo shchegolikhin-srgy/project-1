@@ -13,7 +13,7 @@ use axum::extract::State;
 
 pub async fn logout_handler(State(state): State<Arc<AppState>>,
     Json(request): Json<Claims>)->Result<(), StatusCode>{
-    return logout(State(state), Json(request)).await
+    Ok(())
 }
 
 pub async fn delete_user_handler(State(state): State<Arc<AppState>>,

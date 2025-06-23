@@ -40,8 +40,9 @@ pub async fn auth_middleware(
 pub fn protected_router(state: Arc<AppState>) -> Router<Arc<AppState>> {
     Router::new()
         .route("/v1/logout", post(logout::logout_handler))
-        .route("/v1/delete-user", post(logout::delete_user_handler))
+        .route("/v1/delete_user", post(logout::delete_user_handler))
         .route("/v1/protected", get(protected_route))
+        .route("/v1/update_role", post(register::update_user_role_handler))
         .with_state(state.clone())
         .layer(from_fn_with_state(state, auth_middleware))
 }
@@ -50,7 +51,7 @@ pub fn public_router(state: Arc<AppState>) -> Router<Arc<AppState>> {
     Router::new()
         .route("/v1/login", post(login::login_handler))
         .route("/v1/register", post(register::register_handler))
-        .route("/v1/refresh", post(refresh::register_handler))
+        .route("/v1/refresh", post(refresh::refresh_handler))
         .with_state(state)
 }
 

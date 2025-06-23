@@ -8,7 +8,7 @@ use std::sync::Arc;
 use crate::core::app_state::AppState;
 use axum::extract::State;
 
-pub async fn register_handler(State(state): State<Arc<AppState>>,
+pub async fn refresh_handler(State(state): State<Arc<AppState>>,
     Json(request): Json<RefreshRequest>) -> Result<Json<TokenResponse>, StatusCode> {
     return refresh(State(state), Json(request)).await
 }

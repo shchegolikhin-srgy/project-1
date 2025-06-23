@@ -1,0 +1,2 @@
+fn(State<Arc<AppState>>, axum::Json<RegisterRequest>) -> impl Future<Output = Result<(), anyhow::Error>> {register_handler}
+fn(State<Arc<AppState>>, axum::Json<RegisterRequest>) -> impl Future<Output = Result<(), anyhow::Error>> {register_handler}: Handler<_, _>
