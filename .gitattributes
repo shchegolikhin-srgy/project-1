@@ -1,0 +1,4 @@
+Makefile linguist-detectable=false
+*.mk linguist-detectable=false
+Dockerfile linguist-detectable=false
+*.dockerfile linguist-detectable=false
