@@ -23,6 +23,6 @@ DELETE FROM users WHERE username ='#';
 
 CREATE TABLE refresh_tokens(
     id SERIAL PRIMARY KEY,
-    token_hash TEXT NOT NULL,
+    token TEXT NOT NULL,
     user_id INTEGER REFERENCES users(id)
 );

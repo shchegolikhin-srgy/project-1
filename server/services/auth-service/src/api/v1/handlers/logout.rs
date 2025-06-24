@@ -3,7 +3,8 @@ use axum::{
     Json,
 };
 use crate::services::{
-    auth_service::{delete_user, logout}
+    auth_service::delete_user,
+    token_service::logout,
 };
 use crate::models::token::Claims;
 use std::sync::Arc;

@@ -1,4 +1,4 @@
 pub enum Error{
-    UserAlreadyExists,
-    UserNotFound,
+    UserReqisterError(String),
+    LoginError(String),
 }

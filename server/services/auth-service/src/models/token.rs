@@ -13,3 +13,12 @@ pub struct Claims {
     pub exp: usize,
     pub role:String
 }
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct RefreshTokenData{
+    pub refresh_token:String,
+    pub username:String,
+}
+#[derive(sqlx::FromRow, Clone)]
+pub struct  RefreshToken{
+    pub refresh_token:String,
+}

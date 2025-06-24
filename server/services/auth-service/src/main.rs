@@ -8,8 +8,7 @@ use dotenv::dotenv;
 async fn main()-> Result<(), Box<dyn std::error::Error>>{
     dotenv().ok();
     let settings = Settings::new().await?;
-
-    let app_state = AppState::new(&settings.database_url).await?; 
+    let app_state = AppState::new(settings.clone()).await?; 
     let state = Arc::new(app_state);
     run_server(state.clone(), settings).await?;
     Ok(())

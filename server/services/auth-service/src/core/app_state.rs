@@ -1,6 +1,7 @@
 use sqlx::postgres::PgPoolOptions;
 use sqlx::PgPool;
 use jsonwebtoken::{Algorithm, DecodingKey, EncodingKey};
+use crate::core::config::Settings;
 
 #[derive(Clone)]
 pub struct AppState {
@@ -10,18 +11,16 @@ pub struct AppState {
     pub algorithm:Algorithm,
 }
 
-const SECRET_KEY: &str = "your-secret-key-here";
-
 impl AppState{
-    pub async fn new(database_url:&str)->Result<Self, sqlx::Error>{
+    pub async fn new(settings:Settings)->Result<Self, sqlx::Error>{
         let pool = PgPoolOptions::new()
         .max_connections(40)
-        .connect(database_url)
+        .connect(&settings.database_url)
         .await?;
         Ok(Self {
             pool: pool,
-            encoding_key: EncodingKey::from_secret(SECRET_KEY.as_bytes()),
-            decoding_key: DecodingKey::from_secret(SECRET_KEY.as_bytes()),
+            encoding_key: EncodingKey::from_secret(settings.secret_key.as_bytes()),
+            decoding_key: DecodingKey::from_secret(settings.secret_key.as_bytes()),
             algorithm:Algorithm::HS256,
          })
     } 

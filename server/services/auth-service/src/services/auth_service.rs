@@ -1,19 +1,12 @@
-use crate::{core::app_state::AppState, db};
+use crate::{core::app_state::AppState};
 use axum::{extract::State, Json};
 use crate::models::{
     user::*,
-    token::Claims,
     auth::*,
 };
 use std::sync::Arc;
 use bcrypt::{hash, DEFAULT_COST, verify};
 use crate::db::user_data;
-
-pub async fn logout(State(state): State<Arc<AppState>>,
-    Json(claims):Json<Claims>, 
-)-> Result<(), anyhow::Error>{
-    Ok(())
-}
 
 pub async fn register_user_by_email(
     State(state): State<Arc<AppState>>,

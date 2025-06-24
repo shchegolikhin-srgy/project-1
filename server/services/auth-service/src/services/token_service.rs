@@ -6,8 +6,9 @@ use axum::{extract::State, Json};
 use crate::models::{
     auth::RefreshRequest, 
     user::{UserData, User},
-    token::{Claims, TokenResponse},
+    token::*,
 };
+use crate::db::token_data::*;
 use std::sync::Arc;
 
 const ACCESS_TOKEN_EXPIRE_MINUTES: i64 = 30;
@@ -27,17 +28,23 @@ pub async fn login(State(state): State<Arc<AppState>>,
     };
     let access_token = encode(&Header::new(state.algorithm), &access_claims, &state.encoding_key)?;
     let refresh_claims:Claims = Claims { 
-        sub:db_user.username, 
+        sub:db_user.username.clone(), 
         exp: (Utc::now() + Duration::days(365)).timestamp() as usize, 
         role:db_user.role,  
     };
     let refresh_token :String = encode(&Header::new(state.algorithm), &refresh_claims, &state.encoding_key)?;
-
-    Ok(Json(TokenResponse {
-        access_token: access_token,
-        token_type: "Bearer".to_string(),
-        refresh_token: refresh_token,
-    }))
+    let refresh_token_data:RefreshTokenData= RefreshTokenData {
+        refresh_token: refresh_token.clone(), 
+        username: db_user.username
+    };
+    match insert_refresh_token(&state.pool, refresh_token_data).await{
+        Ok(())=>return Ok(Json(TokenResponse {
+            access_token: access_token,
+            token_type: "Bearer".to_string(),
+            refresh_token: refresh_token, 
+        })),
+        Err(_)=>return Err(anyhow::anyhow!("server error"))
+    }
 }
 
 pub async fn refresh(State(state): State<Arc<AppState>>,
@@ -50,17 +57,23 @@ pub async fn refresh(State(state): State<Arc<AppState>>,
     ).unwrap();
     let access_exp = Utc::now()+Duration::minutes(ACCESS_TOKEN_EXPIRE_MINUTES);
     let access_claims = Claims {
-        sub: token_data.claims.sub,  
+        sub: token_data.claims.sub.clone(),  
         exp: access_exp.timestamp() as usize,
         role: token_data.claims.role,
     };
     let access_token = encode(&Header::new(state.algorithm), &access_claims, &state.encoding_key)?;
-
-    Ok(Json(TokenResponse {
-        access_token: access_token,
-        token_type: "Bearer".to_string(),
-        refresh_token: request.refresh_token,
-        }))
+    let refresh_token_data:RefreshTokenData= RefreshTokenData {
+        refresh_token: request.refresh_token.clone(), 
+        username: token_data.claims.sub
+    };
+    match check_refresh_token(&state.pool, refresh_token_data).await{
+        Ok(())=>return Ok(Json(TokenResponse {
+            access_token: access_token,
+            token_type: "Bearer".to_string(),
+            refresh_token: request.refresh_token.clone(),
+        })),
+        Err(_)=>return Err(anyhow::anyhow!("server error"))
+    }
 }
 
 pub async fn verify_jwt(State(state): State<Arc<AppState>>, token: &str) -> Result<User, anyhow::Error> {
@@ -72,4 +85,10 @@ pub async fn verify_jwt(State(state): State<Arc<AppState>>, token: &str) -> Resu
         username:claims.claims.sub, 
         role: claims.claims.role,
     })
+}
+
+pub async fn logout(State(state): State<Arc<AppState>>,
+    Json(claims):Json<Claims>, 
+)-> Result<(), anyhow::Error>{
+    Ok(())
 }
