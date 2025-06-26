@@ -20,5 +20,5 @@ pub struct RefreshTokenData{
 }
 #[derive(sqlx::FromRow, Clone)]
 pub struct  RefreshToken{
-    pub refresh_token:String,
+    pub token:String,
 }

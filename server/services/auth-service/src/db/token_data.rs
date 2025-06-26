@@ -7,8 +7,13 @@ pub async fn delete_refresh_token(
     data:RefreshTokenData,
 ) -> Result<(), anyhow::Error> {
     sqlx::query(
-        "DELETE FROM refresh_tokens WHERE id = $1;")
-        
+        "DELETE FROM refresh_tokens
+        USING users
+        WHERE refresh_tokens.user_id = users.id
+          AND users.username = $1
+          AND refresh_tokens.token = $2;")
+          .bind(&data.username)
+          .bind(&data.refresh_token)
         .execute(pool) 
         .await?;
     Ok(())
@@ -31,18 +36,18 @@ pub async fn check_refresh_token(
     pool:&PgPool,
     data:RefreshTokenData,
 )-> Result<(), anyhow::Error> {
-    let current_token = sqlx::query_as::<_, RefreshToken>(
-        "SELECT refresh_tokens.token FROM refresh_tokens JOIN users ON refresh_tokens.user_id = users.id WHERE users.username =$1;")
-        .bind(&data.refresh_token)
-        .fetch_optional(pool) 
+    let tokens = sqlx::query_as::<_, RefreshToken>(
+        "SELECT refresh_tokens.token 
+         FROM refresh_tokens 
+         JOIN users ON refresh_tokens.user_id = users.id 
+         WHERE users.username = $1")
+        .bind(&data.username)
+        .fetch_all(pool) 
         .await?;
-    if let Some(token) = current_token.clone(){
-        if token.refresh_token == data.refresh_token{ 
-            return Ok(()) 
-        }
-        else{ 
-            return Err(anyhow::anyhow!("token not found"))
-        }
+    
+    if tokens.iter().any(|t| t.token == data.refresh_token) {
+        Ok(())
+    } else {
+        Err(anyhow::anyhow!("Token not found"))
     }
-    else { return Err(anyhow::anyhow!("token not found"))};
 }

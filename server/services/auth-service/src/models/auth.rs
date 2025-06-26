@@ -28,3 +28,7 @@ pub struct UpdateRoleData{
     pub new_role:String,
     pub username:String,
 }
+#[derive(Debug, Serialize, Deserialize)]
+pub struct LogoutRequest {
+    pub refresh_token: String,
+}

@@ -54,7 +54,7 @@ pub async fn refresh(State(state): State<Arc<AppState>>,
         &request.refresh_token,
         &state.decoding_key,
         &Validation::new(state.algorithm),
-    ).unwrap();
+    )?;
     let access_exp = Utc::now()+Duration::minutes(ACCESS_TOKEN_EXPIRE_MINUTES);
     let access_claims = Claims {
         sub: token_data.claims.sub.clone(),  
@@ -62,6 +62,7 @@ pub async fn refresh(State(state): State<Arc<AppState>>,
         role: token_data.claims.role,
     };
     let access_token = encode(&Header::new(state.algorithm), &access_claims, &state.encoding_key)?;
+
     let refresh_token_data:RefreshTokenData= RefreshTokenData {
         refresh_token: request.refresh_token.clone(), 
         username: token_data.claims.sub
@@ -70,7 +71,7 @@ pub async fn refresh(State(state): State<Arc<AppState>>,
         Ok(())=>return Ok(Json(TokenResponse {
             access_token: access_token,
             token_type: "Bearer".to_string(),
-            refresh_token: request.refresh_token.clone(),
+            refresh_token: request.refresh_token,
         })),
         Err(_)=>return Err(anyhow::anyhow!("server error"))
     }
@@ -88,7 +89,10 @@ pub async fn verify_jwt(State(state): State<Arc<AppState>>, token: &str) -> Resu
 }
 
 pub async fn logout(State(state): State<Arc<AppState>>,
-    Json(claims):Json<Claims>, 
+    data:RefreshTokenData, 
 )-> Result<(), anyhow::Error>{
-    Ok(())
+    match delete_refresh_token(&state.pool, data).await{
+        Ok(())=>return Ok(()),
+        Err(_)=>return Err(anyhow::anyhow!("server error"))
+    }
 }

@@ -32,7 +32,7 @@ pub async fn auth_middleware(
 
     response.headers_mut().insert(
         "X-Username",
-        HeaderValue::from_str(&user.username).unwrap(),
+        HeaderValue::from_str(&user.username).map_err(|_| StatusCode::UNAUTHORIZED)?,
     );
     Ok(response)
 }
