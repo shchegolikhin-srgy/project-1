@@ -13,7 +13,7 @@ volumes:
   postgres_data:
   kong_db_data: {}
   cassandra-node-1:
-  
+
 x-kong-config: &kong-env
   KONG_DATABASE: postgres
   KONG_PG_HOST: kong-ee-database
@@ -106,28 +106,28 @@ services:
       - kong-ee-net
     depends_on:
       kong-ee-database:
-        condition: service_healthy   # Wait until Postgres is up and healthy
+        condition: service_healthy
     restart: on-failure
     environment:
-      <<: *kong-env                 # Reuse environment config from x-kong-config
-      KONG_PASSWORD: handyshake    # Admin GUI password (required for RBAC)
-    command: kong migrations bootstrap  # Run DB migrations to initialize Kong schema
+      <<: *kong-env
+      KONG_PASSWORD: handyshake
+    command: kong migrations bootstrap
 
   kong-cp:
-    image: '${GW_IMAGE:-kong/kong-gateway:3.10.0.2}'  # Main Kong Gateway Control Plane (default to latest version)
+    image: '${GW_IMAGE:-kong/kong-gateway:3.10.0.2}'
     container_name: kong-cp
     restart: on-failure
     networks:
       - kong-ee-net
     environment:
       <<: *kong-env
-      KONG_ADMIN_LISTEN: 0.0.0.0:8001, 0.0.0.0:8444 ssl  # Admin API on HTTP + HTTPS
-      KONG_ADMIN_GUI_LISTEN: 0.0.0.0:8002, 0.0.0.0:8445 ssl  # Kong Manager on HTTP + HTTPS
-      KONG_ADMIN_GUI_URL: http://${GW_HOST:-localhost}:8002  # URL for GUI links
-      KONG_PASSWORD: handyshake  # Required for logging in to Kong Manager (RBAC)
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001, 0.0.0.0:8444 ssl
+      KONG_ADMIN_GUI_LISTEN: 0.0.0.0:8002, 0.0.0.0:8445 ssl
+      KONG_ADMIN_GUI_URL: http://${GW_HOST:-localhost}:8002
+      KONG_PASSWORD: handyshake
     depends_on:
       kong-bootstrap:
-        condition: service_completed_successfully  # Start only after bootstrap has succeeded
+        condition: service_completed_successfully
     ports:
       - "8000:8000"  # Proxy HTTP
       - "8443:8443"  # Proxy HTTPS
