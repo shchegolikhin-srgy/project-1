@@ -1,4 +1,4 @@
-use axum::http::{request, HeaderMap, StatusCode};
+use axum::http:: {HeaderMap, StatusCode};
 use crate::services::{
     auth_service::delete_user,
     token_service::logout,
@@ -13,7 +13,7 @@ pub async fn logout_handler(
     headers: HeaderMap,
     Json(request): Json<LogoutRequest>,
 )->Result<(), StatusCode>{
-    if let Some(username)= headers.get("X-Username"){
+    if let Some(username)= headers.get("X-User-Id"){
         let data:RefreshTokenData =RefreshTokenData {
             refresh_token: request.refresh_token, 
             username: username.to_str().unwrap_or("invalid").to_string(),
@@ -29,7 +29,7 @@ pub async fn logout_handler(
 pub async fn delete_user_handler(State(state): State<Arc<AppState>>,
     headers: HeaderMap,
     )->Result<(), StatusCode>{
-    if let Some(username)= headers.get("X-Username"){
+    if let Some(username)= headers.get("X-User-Id"){
         delete_user(State(state), username.to_str().unwrap_or("invalid"))
             .await
             .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;

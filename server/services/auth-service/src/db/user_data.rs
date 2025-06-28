@@ -5,6 +5,7 @@ use crate::models::{
     auth::UpdateRoleData,
     user::{UserData, DbUser}
 };
+use uuid::Uuid;
 
 pub async fn register_user_by_email(
     pool:&PgPool,
@@ -40,33 +41,33 @@ pub async fn register_user_by_role(
 pub async fn check_user_by_email(
     pool:&PgPool,
     user:UserData
-)-> Result<String, anyhow::Error>{
+)-> Result<(String, Uuid), anyhow::Error>{
     let result =sqlx::query_as::<_, DbUser>(
-    "SELECT username, role, password_hash FROM users WHERE email= $1;"
+    "SELECT external_id, role, password_hash FROM users WHERE email= $1;"
     )
     .bind(&user.email)
     .fetch_optional(pool) 
         .await?;
-    let Some(db_user) = result.clone() else {
+    let Some(db_user) = result else {
         return Err(anyhow::anyhow!("user not found"))
     };
-    Ok(db_user.password_hash)
+    Ok((db_user.password_hash, db_user.external_id))
 }
 
 pub async fn check_user_by_username(
     pool:&PgPool,
     user: UserData
-)-> Result<String,anyhow::Error>{
+)-> Result<(String, Uuid), anyhow::Error>{
     let result = sqlx::query_as::<_, DbUser>(
-        "SELECT username, role, password_hash FROM users WHERE username = $1;",
+        "SELECT external_id, role, password_hash FROM users WHERE username = $1;",
     )
     .bind(&user.username)
     .fetch_optional(pool) 
     .await?;
-    let Some(db_user) = result.clone() else {
+    let Some(db_user) = result else {
         return Err(anyhow::anyhow!("user not found"))
     };
-    Ok(db_user.password_hash)
+    Ok((db_user.password_hash, db_user.external_id))
 }
 
 

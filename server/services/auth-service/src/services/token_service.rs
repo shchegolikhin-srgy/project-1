@@ -10,6 +10,7 @@ use crate::models::{
 };
 use crate::db::token_data::*;
 use std::sync::Arc;
+use uuid::Uuid;
 
 const ACCESS_TOKEN_EXPIRE_MINUTES: i64 = 30;
 
@@ -22,20 +23,20 @@ pub async fn login(State(state): State<Arc<AppState>>,
     let access_exp = Utc::now()+Duration::minutes(ACCESS_TOKEN_EXPIRE_MINUTES);
 
     let access_claims:Claims = Claims {
-        sub: db_user.username.clone(),
+        sub: db_user.id.clone().to_string(),
         exp: access_exp.timestamp() as usize,
         role: db_user.role.clone()
     };
     let access_token = encode(&Header::new(state.algorithm), &access_claims, &state.encoding_key)?;
     let refresh_claims:Claims = Claims { 
-        sub:db_user.username.clone(), 
+        sub:db_user.id.clone().to_string(), 
         exp: (Utc::now() + Duration::days(365)).timestamp() as usize, 
         role:db_user.role,  
     };
     let refresh_token :String = encode(&Header::new(state.algorithm), &refresh_claims, &state.encoding_key)?;
     let refresh_token_data:RefreshTokenData= RefreshTokenData {
         refresh_token: refresh_token.clone(), 
-        username: db_user.username
+        username: db_user.id.to_string()
     };
     match insert_refresh_token(&state.pool, refresh_token_data).await{
         Ok(())=>return Ok(Json(TokenResponse {
@@ -82,8 +83,9 @@ pub async fn verify_jwt(State(state): State<Arc<AppState>>, token: &str) -> Resu
         token,
         &state.decoding_key,
         &Validation::new(state.algorithm))?;
+    let id = Uuid::parse_str(&claims.claims.sub)?;
     Ok(User{
-        username:claims.claims.sub, 
+        id:id, 
         role: claims.claims.role,
     })
 }

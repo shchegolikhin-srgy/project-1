@@ -31,8 +31,12 @@ pub async fn auth_middleware(
     let mut response = next.run(request).await;
 
     response.headers_mut().insert(
-        "X-Username",
-        HeaderValue::from_str(&user.username).map_err(|_| StatusCode::UNAUTHORIZED)?,
+        "X-User-Id",
+        HeaderValue::from_str(&user.id.to_string()).map_err(|_| StatusCode::UNAUTHORIZED)?,
+    );
+    response.headers_mut().insert(
+        "X-User-Role",
+        HeaderValue::from_str(&user.role.to_string()).map_err(|_| StatusCode::UNAUTHORIZED)?,
     );
     Ok(response)
 }

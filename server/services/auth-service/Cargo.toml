@@ -7,8 +7,7 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 tokio = { version = "1", features = ["full"] }
 axum = "0.7"
-sqlx = { version = "0.8", features = ["postgres", "runtime-tokio-rustls"] } 
-sqlx-cli = "0.8"
+sqlx = { version = "0.8", features = ["postgres", "runtime-tokio-rustls", "uuid"] } 
 jsonwebtoken = "8.2"
 base64 = "0.22.1"
 dotenvy = "0.15"
@@ -17,3 +16,4 @@ chrono = { version = "0.4", features = ["serde"] }
 anyhow = "1.0"
 tower = "0.4"
 dotenv = "0.15.0"
+uuid = "1.17.0"

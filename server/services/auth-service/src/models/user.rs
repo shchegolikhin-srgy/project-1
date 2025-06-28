@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 use sqlx;
+use uuid::Uuid;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct RegisterUser{
@@ -9,15 +10,15 @@ pub struct RegisterUser{
     pub role:String
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Debug, Clone)]
 pub struct User{
-    pub username:String,
+    pub id:Uuid,
     pub role:String
 }
 
-#[derive(sqlx::FromRow, Clone)]
+#[derive(sqlx::FromRow, Clone, Debug)]
 pub struct DbUser {
-    pub username: String,
+    pub external_id:Uuid,
     pub role:String,
     pub password_hash: String,
 }

@@ -1,5 +1,5 @@
 use crate::{core::app_state::AppState};
-use axum::{extract::State, Json};
+use axum::{extract::State};
 use crate::models::{
     user::*,
     auth::*,
@@ -35,13 +35,13 @@ pub async fn check_user_by_email(
     user:UserData
 )-> Result<User, anyhow::Error>{
     match user_data::check_user_by_username(&state.pool, user.clone()).await {
-        Ok(password_hash)=>{
+        Ok((password_hash, id))=>{
             if !verify(&user.password.clone(), &password_hash)? {
                 Err(anyhow::anyhow!("Invalid password"))
             }
             else{
                 Ok(User{
-                    username:user.username,
+                    id:id,
                     role:user.role,
                 })
             }
@@ -55,13 +55,13 @@ pub async fn check_user_by_username(
     user: UserData
 )-> Result<User,anyhow::Error>{
     match user_data::check_user_by_username(&state.pool, user.clone()).await {
-        Ok(password_hash)=>{
+        Ok((password_hash, id))=>{
             if !verify(&user.password.clone(), &password_hash)? {
                 Err(anyhow::anyhow!("Invalid password"))
             }
             else{
                 Ok(User{
-                    username:user.username,
+                    id:id,
                     role:user.role,
                 })
             }
