@@ -1,4 +1,3 @@
-
 use auth_service::{run_server, AppState};
 use auth_service::core::config::Settings;
 use std::sync::Arc;

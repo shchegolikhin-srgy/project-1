@@ -12,9 +12,9 @@ pub struct AppState {
 }
 
 impl AppState{
-    pub async fn new(settings:Settings)->Result<Self, sqlx::Error>{
+    pub async fn new(settings:Settings)->Result<Self, anyhow::Error>{
         let pool = PgPoolOptions::new()
-        .max_connections(40)
+        .max_connections(settings.max_pool_connections)
         .connect(&settings.database_url)
         .await?;
         Ok(Self {

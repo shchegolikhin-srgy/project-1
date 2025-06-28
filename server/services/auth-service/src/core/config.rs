@@ -1,17 +1,17 @@
-use axum::Error;
+
 use std::net::SocketAddr;
 use std::env;
 
 #[derive(Debug, Clone)]
 pub struct Settings{
     pub database_url:String,
-    pub max_pool_connections:u8,
+    pub max_pool_connections:u32,
     pub addr:SocketAddr,
     pub secret_key:String,
 }
 
 impl Settings{
-    pub async fn new()->Result<Self, Error>{
+    pub async fn new()->Result<Self, anyhow::Error>{
         Ok(Self {
             database_url: env::var("DATABASE_URL").expect("DATABASE_URL must be set."),
             max_pool_connections:  40,
