@@ -7,16 +7,21 @@ use crate::models::{auth::LogoutRequest, token::RefreshTokenData};
 use std::sync::Arc;
 use crate::core::app_state::AppState;
 use axum::{extract::State, Json};
-
+use uuid::Uuid;
 pub async fn logout_handler(
     State(state): State<Arc<AppState>>,
     headers: HeaderMap,
     Json(request): Json<LogoutRequest>,
 )->Result<(), StatusCode>{
-    if let Some(username)= headers.get("X-User-Id"){
+    if let Some(id)= headers.get("X-User-Id"){
+        
         let data:RefreshTokenData =RefreshTokenData {
             refresh_token: request.refresh_token, 
-            username: username.to_str().unwrap_or("invalid").to_string(),
+            id: Uuid::parse_str(
+                &id.to_str()
+                .unwrap_or("invalid")
+                .to_string())
+                .map_err(|_| return StatusCode::UNAUTHORIZED)?,
        };
        match logout(State(state), data).await{
            Ok(())=>return Ok(()),

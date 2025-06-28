@@ -36,7 +36,7 @@ pub async fn login(State(state): State<Arc<AppState>>,
     let refresh_token :String = encode(&Header::new(state.algorithm), &refresh_claims, &state.encoding_key)?;
     let refresh_token_data:RefreshTokenData= RefreshTokenData {
         refresh_token: refresh_token.clone(), 
-        username: db_user.id.to_string()
+        id: db_user.id,
     };
     match insert_refresh_token(&state.pool, refresh_token_data).await{
         Ok(())=>return Ok(Json(TokenResponse {
@@ -66,7 +66,7 @@ pub async fn refresh(State(state): State<Arc<AppState>>,
 
     let refresh_token_data:RefreshTokenData= RefreshTokenData {
         refresh_token: request.refresh_token.clone(), 
-        username: token_data.claims.sub
+        id:Uuid::parse_str(&token_data.claims.sub)?,
     };
     match check_refresh_token(&state.pool, refresh_token_data).await{
         Ok(())=>return Ok(Json(TokenResponse {

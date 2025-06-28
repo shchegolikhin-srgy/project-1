@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use uuid::Uuid;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct TokenResponse {
@@ -13,10 +14,10 @@ pub struct Claims {
     pub exp: usize,
     pub role:String
 }
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Clone)]
 pub struct RefreshTokenData{
     pub refresh_token:String,
-    pub username:String,
+    pub id:Uuid,
 }
 #[derive(sqlx::FromRow, Clone)]
 pub struct  RefreshToken{
