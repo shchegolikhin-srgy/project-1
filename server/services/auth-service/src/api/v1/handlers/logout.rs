@@ -14,7 +14,6 @@ pub async fn logout_handler(
     Json(request): Json<LogoutRequest>,
 )->Result<(), StatusCode>{
     if let Some(id)= headers.get("X-User-Id"){
-        
         let data:RefreshTokenData =RefreshTokenData {
             refresh_token: request.refresh_token, 
             id: Uuid::parse_str(
