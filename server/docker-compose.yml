@@ -26,14 +26,18 @@ services:
     ports:
     - "8080:4002"
     environment:
-      DATABASE_URL: "postgres://user:password@localhost:5432/projectdb"
+      DATABASE_URL: "postgres://user:password@auth-service-db:5432/authdb"
+      SECRET_KEY: "your-secret-key-here"
       KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
       REDIS_URL: "redis://redis:6379"
     depends_on:
-      postgres:
+      auth-service-db:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     networks:
       - default
+      - kong-ee-net 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.0
     environment:
@@ -52,18 +56,18 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-  postgres:
+  auth-service-db:
     image: postgres:16-alpine
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: projectdb
+      POSTGRES_DB: authdb
     ports:
       - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user -d projectdb"]
+      test: ["CMD-SHELL", "pg_isready -U user -d authdb"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -134,9 +138,9 @@ services:
       - "8001:8001"  # Admin API HTTP
       - "8444:8444"  # Admin API HTTPS
 
-  cassandra-posts:
+  posts-service-db:
     image: "cassandra:latest"
-    container_name: "cassandra-posts"
+    container_name: "posts-service-db"
     ports:
       - 7000:7000
       - 9042:9042

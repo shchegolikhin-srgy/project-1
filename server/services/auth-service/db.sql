@@ -1,3 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 CREATE TABLE users(
     id SERIAL PRIMARY KEY,
     external_id UUID DEFAULT uuid_generate_v4() UNIQUE NOT NULL,
@@ -7,7 +9,6 @@ CREATE TABLE users(
     is_active BOOLEAN,
     role VARCHAR(15) NOT NULL DEFAULT 'user'
 );
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 INSERT INTO users (username, password_hash) VALUES('#', '#');
 
